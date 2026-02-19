@@ -1,8 +1,8 @@
-name: FalloutBuilds to Discord (Weekly)
+name: FalloutBuilds to Discord (Weekly Screenshots)
 
 on:
   schedule:
-    - cron: "10 16 * * 2"   # Tuesday 16:10 UTC (~late morning US Central)
+    - cron: "10 16 * * 2"  # Tuesday 16:10 UTC (~late morning US Central)
   workflow_dispatch:
 
 jobs:
@@ -15,15 +15,16 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
       - name: Install deps
         run: |
-          pip install playwright beautifulsoup4 lxml requests
+          pip install playwright requests
           python -m playwright install --with-deps chromium
 
       - name: Run watcher
         env:
           MINERVA_WEBHOOK: ${{ secrets.MINERVA_WEBHOOK }}
           NUKE_WEBHOOK: ${{ secrets.NUKE_WEBHOOK }}
-          INCLUDE_SOURCE_LINK: "0"
-          ALWAYS_POST: "1"
-        run: python watch.py
+        run: python -u watch.py
